@@ -8,6 +8,8 @@ import Dashboard from "./pages/Dashboard";
 import Messages from "./pages/Messages";
 import Analytics from "./pages/Analytics";
 import Profile from "./pages/Profile";
+import BarChart from "./components/BarChart";
+import LineChart from "./components/LineChar";
 
 
 const router = createBrowserRouter([
@@ -30,6 +32,14 @@ const router = createBrowserRouter([
             {
                 path: '/analytics',
                 element: <Analytics/>
+            },
+            {
+                path: '/analytics/line-chart',
+                element: <LineChart/>
+            },
+            {
+                path: '/analytics/bar-chart',
+                element: <BarChart/>
             },
             {
                 path: '/profile',

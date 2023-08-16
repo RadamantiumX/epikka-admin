@@ -5,7 +5,7 @@ import Pagination from "react-js-pagination";
 export default function Messages() {
     const [message, setMessage] = useState([]);
     const [metaData, setMetaData]= useState([]);
- 
+    const [show, setShow] = useState(true);
     
    
 
@@ -14,7 +14,12 @@ export default function Messages() {
        .then(({data})=>{
         setMessage(data.data);
         setMetaData(data.meta);
-          console.log(data.meta);
+          console.log(data.meta.total);
+          if(data.meta.total <=5){
+            setShow(false)
+          }else{
+            setShow(true)
+          }
        })
     }
     const deleteMessage=(m)=>{
@@ -28,8 +33,8 @@ export default function Messages() {
        })
     }
 
-    const handleAction=()=>{
-      console.log('action');
+    const handleAction=(m)=>{
+      Clipboard
     }
     useEffect(()=>{
       getMessages();
@@ -40,21 +45,21 @@ export default function Messages() {
     return(
         <div>
           
-        {message.length ===0&&<div>No hay mensajes en la bandeja de entrada...</div>}
+        {message.length ===0&&<div className="container empty">No hay mensajes en la bandeja de entrada...</div>}
         {message.length!==0&&<>{message.map(m=>(
             <div className="mt-5 p-2" key={m.id}>
                 <div className="card" style={{ width: "18rem;"}}>
                     <div className="card-body">
-                        <h5 className="card-title">{m.nombre} <i onClick={handleAction} className="fa-regular fa-clipboard copy-hover" data-toggle="tooltip" data-placement="top" title="Copiar"></i></h5>
-                        <h6 className="card-subtitle mb-2 text-muted">{m.email} <i className="fa-regular fa-clipboard copy-hover" data-toggle="tooltip" data-placement="top" title="Copiar"></i></h6>
-                        <p className="card-text">{m.telefono} <i className="fa-regular fa-clipboard copy-hover" data-toggle="tooltip" data-placement="top" title="Copiar"></i></p>
-                        <p className="card-text">{m.mensaje}</p>
+                        <h5 className="card-title">{m.nombre} <i  onClick={() => {navigator.clipboard.writeText(m.nombre); alert('Copiado al portapapeles')}} className="fa-regular fa-clipboard copy-hover" data-toggle="tooltip" data-placement="top" title="Copiar"></i></h5>
+                        <h6 className="card-subtitle mb-2 text-muted">{m.email} <i onClick={() => {navigator.clipboard.writeText(m.email); alert('Copiado al portapapeles')}} className="fa-regular fa-clipboard copy-hover" data-toggle="tooltip" data-placement="top" title="Copiar"></i></h6>
+                        <p className="card-text">{m.telefono} <i onClick={() => {navigator.clipboard.writeText(m.telefono); alert('Copiado al portapapeles')}} className="fa-regular fa-clipboard copy-hover" data-toggle="tooltip" data-placement="top" title="Copiar"></i></p>
+                        <p className="card-text"><b>Mensaje: </b>{m.mensaje}</p>
                         <button className="btn" onClick={ev=>deleteMessage(m)}><i className="fa-solid fa-trash-can"></i> Eliminar</button>
                     </div>
                 </div>
             </div>
         ))}
-        <Pagination
+       {show&&<Pagination
           activePage={metaData.current_page}
           totalItemsCount={metaData.total}
           itemsCountPerPage={metaData.per_page}
@@ -63,7 +68,7 @@ export default function Messages() {
           linkClass="page-link"
           firstPageText="Primera"
           lastPageText="Última"
-        />
+        />}
         </>
         }
            
